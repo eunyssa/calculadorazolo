@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Penal - GTA RP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); }
+        .crime-card { transition: all 0.3s ease; }
+        .crime-card:hover { transform: translateY(-2px); }
+        .selected { border-color: #ef4444; background-color: rgba(239, 68, 68, 0.1); }
+    </style>
+</head>
+<body class="bg-black text-white min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-gavel text-red-500 text-2xl mr-3"></i>
+                    <span class="text-xl font-bold">Calculadora Penal</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="nav-link text-gray-300 hover:text-white transition-colors">Home</a>
+                    <a href="#calculator" class="nav-link text-gray-300 hover:text-white transition-colors">Calculadora</a>
+                    <a href="#about" class="nav-link text-gray-300 hover:text-white transition-colors">Sobre</a>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="https://discord.gg/NEgRuvJJ6B" target="_blank" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors">
+                        <i class="fab fa-discord mr-2"></i>Discord
+                    </a>
+                    <a href="google.com" target="_blank" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-store mr-2"></i>Loja
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home" class="gradient-bg py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="mb-8">
+                <i class="fas fa-balance-scale text-6xl text-red-500 mb-6"></i>
+                <h1 class="text-5xl font-bold mb-6">Calculadora Penal</h1>
+                <p class="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+                    A penalidade certa na hora certa — a calculadora oficial para servidores RP.
+                </p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <button onclick="showCalculator()" class="bg-red-600 hover:bg-red-700 px-8 py-4 rounded-lg text-lg font-semibold transition-colors">
+                    <i class="fas fa-calculator mr-2"></i>Acessar Calculadora Penal
+                </button>
+                <a href="https://discord.gg/NEgRuvJJ6B" target="_blank" class="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-lg text-lg font-semibold transition-colors">
+                    <i class="fab fa-discord mr-2"></i>Entrar no Discord
+                </a>
+                <a href="google.com" target="_blank" class="bg-gray-700 hover:bg-gray-600 px-8 py-4 rounded-lg text-lg font-semibold transition-colors">
+                    <i class="fas fa-store mr-2"></i>Visitar Loja Cali RP
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calculator Section -->
+    <section id="calculator" class="py-16 bg-gray-900 hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold mb-4">Calculadora Penal</h2>
+                <p class="text-gray-400">Selecione os crimes cometidos para calcular a penalidade total</p>
+            </div>
+
+            <!-- Results Panel -->
+            <div class="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700">
+                <!-- Suspect Information (appears when crimes are selected) -->
+                <div id="suspectInfo" class="hidden mb-6 p-4 bg-gray-700 rounded-lg border border-gray-600">
+                    <h3 class="text-lg font-semibold mb-4 text-blue-400">
+                        <i class="fas fa-user mr-2"></i>Informações do Suspeito
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-gray-400 mb-2">ID do Suspeito:</label>
+                            <input type="text" id="suspectId" placeholder="Ex: 12345" class="w-full bg-gray-600 text-white px-4 py-2 rounded-lg border border-gray-500 focus:border-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 mb-2">Nome do Suspeito:</label>
+                            <input type="text" id="suspectName" placeholder="Ex: João Silva" class="w-full bg-gray-600 text-white px-4 py-2 rounded-lg border border-gray-500 focus:border-blue-500 focus:outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-red-500" id="totalMonths">0</div>
+                        <div class="text-gray-400">Meses de Prisão</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-green-500" id="totalFine">R$ 0</div>
+                        <div class="text-gray-400">Multa Total</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-lg">
+                            <label class="text-gray-400 block mb-2">Redução da Pena:</label>
+                            <select id="reduction" class="bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600" onchange="calculateTotal()">
+                                <option value="0">0% - Sem redução</option>
+                                <option value="10">10% - Colaboração</option>
+                                <option value="20">20% - Confissão</option>
+                                <option value="30">30% - Delação premiada</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Selected Crimes List -->
+                <div id="selectedCrimesList" class="hidden mb-6">
+                    <h3 class="text-lg font-semibold mb-3 text-red-400">
+                        <i class="fas fa-list mr-2"></i>Crimes Selecionados:
+                    </h3>
+                    <div id="crimesList" class="space-y-2 max-h-40 overflow-y-auto"></div>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="copyResult()" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg transition-colors">
+                        <i class="fas fa-copy mr-2"></i>Copiar resultado para chat RP
+                    </button>
+                    <button onclick="shareDiscord()" class="bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-lg transition-colors">
+                        <i class="fab fa-discord mr-2"></i>Compartilhar no Discord
+                    </button>
+                    <button onclick="clearAll()" class="bg-gray-600 hover:bg-gray-700 px-6 py-3 rounded-lg transition-colors">
+                        <i class="fas fa-trash mr-2"></i>Limpar Tudo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Crime Categories -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Crimes Graves -->
+                <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                    <h3 class="text-2xl font-bold mb-4 text-red-500">
+                        <i class="fas fa-skull mr-2"></i>Crimes Graves
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="crime-card bg-gray-700 p-4 rounded-lg border border-gray-600 cursor-pointer" onclick="toggleCrime(this, 30, 12000, 'Homicídio')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="w-5 h-5 border-2 border-gray-400 rounded mr-3 flex items-center justify-center crime-checkbox">
+                                        <i class="fas fa-check text-green-400 text-xs hidden"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Homicídio</h4>
+                                        <p class="text-sm text-gray-400">Assassinato de pessoa</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-red-400 font-bold">30 meses</div>
+                                    <div class="text-green-400">R$ 12.000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="crime-card bg-gray-700 p-4 rounded-lg border border-gray-600 cursor-pointer" onclick="toggleCrime(this, 25, 10000, 'Sequestro')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="w-5 h-5 border-2 border-gray-400 rounded mr-3 flex items-center justify-center crime-checkbox">
+                                        <i class="fas fa-check text-green-400 text-xs hidden"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Sequestro</h4>
+                                        <p class="text-sm text-gray-400">Privação de liberdade</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-red-400 font-bold">25 meses</div>
+                                    <div class="text-green-400">R$ 10.000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="crime-card bg-gray-700 p-4 rounded-lg border border-gray-600 cursor-pointer" onclick="toggleCrime(this, 35, 15000, 'Roubo a Banco')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="w-5 h-5 border-2 border-gray-400 rounded mr-3 flex items-center justify-center crime-checkbox">
+                                        <i class="fas fa-check text-green-400 text-xs hidden"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Roubo a Banco</h4>
+                                        <p class="text-sm text-gray-400">Assalto a instituição financeira</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-red-400 font-bold">35 meses</div>
+                                    <div class="text-green-400">R$ 15.000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="crime-card bg-gray-700 p-4 rounded-lg border border-gray-600 cursor-pointer" onclick="toggleCrime(this, 40, 20000, 'Tráfico de Drogas')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="w-5 h-5 border-2 border-gray-400 rounded mr-3 flex items-center justify-center crime-checkbox">
+                                        <i class="fas fa-check text-green-400 text-xs hidden"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Tráfico de Drogas</h4>
+                                        <p class="text-sm text-gray-400">Venda de substâncias ilícitas</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-red-400 font-bold">40 meses</div>
+                                    <div class="text-green-400">R$ 20.000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="crime-card bg-gray-700 p-4 rounded-lg border border-gray-600 cursor-pointer" onclick="toggleCrime(this, 60, 50000, 'Assassinato em Massa')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="w-5 h-5 border-2 border-gray-400 rounded mr-3 flex items-center justify-center crime-checkbox">
+                                        <i class="fas fa-check text-green-400 text-xs hidden"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Assassinato em Massa</h4>
+                                        <p class="text-sm text-gray-400">Múltiplos homicídios</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-red-400 font-bold">60 meses</div>
+                                    <div class="text-green-400">R$ 50.000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="crime-card bg-gray-700 p-4 rounded-lg border border-gray-600 cursor-pointer" onclick="toggleCrime(this, 45, 25000, 'Corrupção')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="w-5 h-5 border-2 border-gray-400 rounded mr-3 flex items-center justify-center crime-checkbox">
+                                        <i class="fas fa-check text-green-400 text-xs hidden"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Corrupção</h4>
+                                        <p class="text-sm text-gray-400">Abuso de poder público</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-red-400 font-bold">45 meses</div>
+                                    <div class="text-green-400">R$ 25.000</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Crimes de Armas -->
+                <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                    <h3 class="text-2xl font-bold mb-4 text-orange-500">
+                        <i class="fas fa-gun mr-2"></i>Crimes de Armas
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="crime-card bg-gray-700 p-4 rounded-lg border border-gray-600 cursor-pointer" onclick="toggleCrime(this, 12, 5000, 'Porte Ilegal de Arma Leve')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="w-5 h-5 border-2 border-gray-400 rounded mr-3 flex items-center justify-center crime-checkbox">
+                                        <i class="fas fa-check text-green-400 text-xs hidden"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Porte Ilegal de Arma Leve</h4>
+                                        <p class="text-sm text-gray-400">Pistola, revólver</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-red-400 font-bold">12 meses</div>
+                                    <div class="text-green-400">R$ 5.000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="crime-card bg-gray-700 p-4 rounded-lg border border-gray-600 cursor-pointer" onclick="toggleCrime(this, 18, 7000, 'Porte Ilegal de Arma Pesada')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="w-5 h-5 border-2 border-gray-400 rounded mr-3 flex items-center justify-center crime-checkbox">
+                                        <i class="fas fa-check text-green-400 text-xs hidden"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Porte Ilegal de Arma Pesada</h4>
+                                        <p class="text-sm text-gray-400">Rifle, metralhadora</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-red-400 font-bold">18 meses</div>
+                                    <div class="text-green-400">R$ 7.000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="crime-card bg-gray-700 p-4 rounded-lg border border-gray-600 cursor-pointer" onclick="toggleCrime(this, 15, 6000, 'Uso Indevido de Equipamentos Policiais')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="w-5 h-5 border-2 border-gray-400 rounded mr-3 flex items-center justify-center crime-checkbox">
+                                        <i class="fas fa-check text-green-400 text-xs hidden"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Uso Indevido de Equipamentos Policiais</h4>
+                                        <p class="text-sm text-gray-400">Uniforme, viatura, equipamentos</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-red-400 font-bold">15 meses</div>
+                                    <div class="text-green-400">R$ 6.000</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Crimes Financeiros -->
+                <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                    <h3 class="text-2xl font-bold mb-4 text-green-500">
+                        <i class="fas fa-dollar-sign mr-2"></i>Crimes Financeiros
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="crime-card bg-gray-700 p-4 rounded-lg border border-gray-600 cursor-pointer" onclick="toggleCrime(this, 8, 3000, 'Estelionato')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="w-5 h-5 border-2 border-gray-400 rounded mr-3 flex items-center justify-center crime-checkbox">
+                                        <i class="fas fa-check text-green-400 text-xs hidden"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Estelionato</h4>
+                                        <p class="text-sm text-gray-400">Fraude, golpe</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-red-400 font-bold">8 meses</div>
+                                    <div class="text-green-400">R$ 3.000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="crime-card bg-gray-700 p-4 rounded-lg border border-gray-600 cursor-pointer" onclick="toggleCrime(this, 15, 7000, 'Lavagem de Dinheiro')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="w-5 h-5 border-2 border-gray-400 rounded mr-3 flex items-center justify-center crime-checkbox">
+                                        <i class="fas fa-check text-green-400 text-xs hidden"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Lavagem de Dinheiro</h4>
+                                        <p class="text-sm text-gray-400">Ocultação de origem ilícita</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-red-400 font-bold">15 meses</div>
+                                    <div class="text-green-400">R$ 7.000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="crime-card bg-gray-700 p-4 rounded-lg border border-gray-600 cursor-pointer" onclick="toggleCrime(this, 5, 2000, 'Furto')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="w-5 h-5 border-2 border-gray-400 rounded mr-3 flex items-center justify-center crime-checkbox">
+                                        <i class="fas fa-check text-green-400 text-xs hidden"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Furto</h4>
+                                        <p class="text-sm text-gray-400">Subtração de bem alheio</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-red-400 font-bold">5 meses</div>
+                                    <div class="text-green-400">R$ 2.000</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Crimes Contra Autoridade -->
+                <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                    <h3 class="text-2xl font-bold mb-4 text-blue-500">
+                        <i class="fas fa-shield-alt mr-2"></i>Crimes Contra Autoridade
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="crime-card bg-gray-700 p-4 rounded-lg border border-gray-600 cursor-pointer" onclick="toggleCrime(this, 3, 1000, 'Desacato')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="w-5 h-5 border-2 border-gray-400 rounded mr-3 flex items-center justify-center crime-checkbox">
+                                        <i class="fas fa-check text-green-400 text-xs hidden"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Desacato</h4>
+                                        <p class="text-sm text-gray-400">Ofensa a autoridade</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-red-400 font-bold">3 meses</div>
+                                    <div class="text-green-400">R$ 1.000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="crime-card bg-gray-700 p-4 rounded-lg border border-gray-600 cursor-pointer" onclick="toggleCrime(this, 10, 5000, 'Resistência à Prisão')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="w-5 h-5 border-2 border-gray-400 rounded mr-3 flex items-center justify-center crime-checkbox">
+                                        <i class="fas fa-check text-green-400 text-xs hidden"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Resistência à Prisão</h4>
+                                        <p class="text-sm text-gray-400">Oposição à detenção</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-red-400 font-bold">10 meses</div>
+                                    <div class="text-green-400">R$ 5.000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="crime-card bg-gray-700 p-4 rounded-lg border border-gray-600 cursor-pointer" onclick="toggleCrime(this, 12, 6000, 'Fuga da Abordagem Policial')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="w-5 h-5 border-2 border-gray-400 rounded mr-3 flex items-center justify-center crime-checkbox">
+                                        <i class="fas fa-check text-green-400 text-xs hidden"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Fuga da Abordagem Policial</h4>
+                                        <p class="text-sm text-gray-400">Evasão durante perseguição</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-red-400 font-bold">12 meses</div>
+                                    <div class="text-green-400">R$ 6.000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="crime-card bg-gray-700 p-4 rounded-lg border border-gray-600 cursor-pointer" onclick="toggleCrime(this, 20, 8000, 'Suborno')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="w-5 h-5 border-2 border-gray-400 rounded mr-3 flex items-center justify-center crime-checkbox">
+                                        <i class="fas fa-check text-green-400 text-xs hidden"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Suborno</h4>
+                                        <p class="text-sm text-gray-400">Oferta de vantagem indevida</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-red-400 font-bold">20 meses</div>
+                                    <div class="text-green-400">R$ 8.000</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Infrações de Trânsito -->
+                <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                    <h3 class="text-2xl font-bold mb-4 text-yellow-500">
+                        <i class="fas fa-car mr-2"></i>Infrações de Trânsito
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="crime-card bg-gray-700 p-4 rounded-lg border border-gray-600 cursor-pointer" onclick="toggleCrime(this, 6, 2500, 'Direção Perigosa')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="w-5 h-5 border-2 border-gray-400 rounded mr-3 flex items-center justify-center crime-checkbox">
+                                        <i class="fas fa-check text-green-400 text-xs hidden"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Direção Perigosa</h4>
+                                        <p class="text-sm text-gray-400">Condução imprudente</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-red-400 font-bold">6 meses</div>
+                                    <div class="text-green-400">R$ 2.500</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="crime-card bg-gray-700 p-4 rounded-lg border border-gray-600 cursor-pointer" onclick="toggleCrime(this, 8, 3000, 'Embriaguez ao Volante')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="w-5 h-5 border-2 border-gray-400 rounded mr-3 flex items-center justify-center crime-checkbox">
+                                        <i class="fas fa-check text-green-400 text-xs hidden"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Embriaguez ao Volante</h4>
+                                        <p class="text-sm text-gray-400">Dirigir sob efeito de álcool</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-red-400 font-bold">8 meses</div>
+                                    <div class="text-green-400">R$ 3.000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="crime-card bg-gray-700 p-4 rounded-lg border border-gray-600 cursor-pointer" onclick="toggleCrime(this, 4, 1500, 'Alta Velocidade')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="w-5 h-5 border-2 border-gray-400 rounded mr-3 flex items-center justify-center crime-checkbox">
+                                        <i class="fas fa-check text-green-400 text-xs hidden"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Alta Velocidade</h4>
+                                        <p class="text-sm text-gray-400">Excesso de velocidade</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-red-400 font-bold">4 meses</div>
+                                    <div class="text-green-400">R$ 1.500</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Organização Criminosa -->
+                <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                    <h3 class="text-2xl font-bold mb-4 text-purple-500">
+                        <i class="fas fa-users mr-2"></i>Organização Criminosa
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="crime-card bg-gray-700 p-4 rounded-lg border border-gray-600 cursor-pointer" onclick="toggleCrime(this, 24, 12000, 'Formação de Quadrilha')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="w-5 h-5 border-2 border-gray-400 rounded mr-3 flex items-center justify-center crime-checkbox">
+                                        <i class="fas fa-check text-green-400 text-xs hidden"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Formação de Quadrilha</h4>
+                                        <p class="text-sm text-gray-400">Associação para fins criminosos</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-red-400 font-bold">24 meses</div>
+                                    <div class="text-green-400">R$ 12.000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="crime-card bg-gray-700 p-4 rounded-lg border border-gray-600 cursor-pointer" onclick="toggleCrime(this, 30, 15000, 'Associação Criminosa')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="w-5 h-5 border-2 border-gray-400 rounded mr-3 flex items-center justify-center crime-checkbox">
+                                        <i class="fas fa-check text-green-400 text-xs hidden"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Associação Criminosa</h4>
+                                        <p class="text-sm text-gray-400">Organização estruturada</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-red-400 font-bold">30 meses</div>
+                                    <div class="text-green-400">R$ 15.000</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 bg-gray-800 hidden">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl font-bold mb-8">Sobre a Calculadora Penal</h2>
+            <div class="bg-gray-900 rounded-lg p-8 border border-gray-700">
+                <p class="text-lg text-gray-300 mb-6">
+                    A padronização das penalidades é fundamental para manter a justiça e o equilíbrio nos servidores de GTA Roleplay. 
+                    Nossa calculadora garante que todos os crimes sejam punidos de forma consistente e justa.
+                </p>
+                <p class="text-lg text-gray-300 mb-8">
+                    Criado pela Cali RP para facilitar o trabalho da polícia e da justiça RP, 
+                    proporcionando uma ferramenta confiável e precisa para o cálculo de penalidades.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="https://discord.gg/NEgRuvJJ6B" target="_blank" class="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-lg text-lg font-semibold transition-colors">
+                        <i class="fab fa-discord mr-2"></i>Entrar no Discord
+                    </a>
+                    <a href="google.com" target="_blank" class="bg-red-600 hover:bg-red-700 px-8 py-4 rounded-lg text-lg font-semibold transition-colors">
+                        <i class="fas fa-store mr-2"></i>Visitar Loja Cali RP
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black border-t border-gray-800 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <div class="flex space-x-6">
+                        <a href="#home" class="nav-link text-gray-400 hover:text-white transition-colors">Home</a>
+                        <a href="#calculator" class="nav-link text-gray-400 hover:text-white transition-colors">Calculadora Penal</a>
+                        <a href="#about" class="nav-link text-gray-400 hover:text-white transition-colors">Sobre</a>
+                    </div>
+                </div>
+                <div class="flex space-x-4 mb-4 md:mb-0">
+                    <a href="https://discord.gg/NEgRuvJJ6B" target="_blank" class="text-blue-400 hover:text-blue-300 transition-colors">
+                        <i class="fab fa-discord text-2xl"></i>
+                    </a>
+                    <a href="google.com" target="_blank" class="text-red-400 hover:text-red-300 transition-colors">
+                        <i class="fas fa-store text-2xl"></i>
+                    </a>
+                </div>
+                <div class="text-gray-400 text-center md:text-right">
+                    <p>© 2025 Cali RP - Todos os direitos reservados.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let selectedCrimes = [];
+        let totalMonths = 0;
+        let totalFine = 0;
+
+        // Navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = this.getAttribute('href').substring(1);
+                showSection(target);
+            });
+        });
+
+        function showSection(sectionId) {
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+
+        function showCalculator() {
+            showSection('calculator');
+        }
+
+        function toggleCrime(element, months, fine, name) {
+            const isSelected = element.classList.contains('selected');
+            const checkbox = element.querySelector('.crime-checkbox i');
+            
+            if (isSelected) {
+                element.classList.remove('selected');
+                checkbox.classList.add('hidden');
+                selectedCrimes = selectedCrimes.filter(crime => 
+                    !(crime.months === months && crime.fine === fine && crime.name === name)
+                );
+            } else {
+                element.classList.add('selected');
+                checkbox.classList.remove('hidden');
+                selectedCrimes.push({ months, fine, name, element });
+            }
+            
+            updateSelectedCrimesList();
+            calculateTotal();
+            updateSuspectInfoVisibility();
+        }
+
+        function updateSelectedCrimesList() {
+            const crimesList = document.getElementById('crimesList');
+            const selectedCrimesDiv = document.getElementById('selectedCrimesList');
+            
+            if (selectedCrimes.length === 0) {
+                selectedCrimesDiv.classList.add('hidden');
+                return;
+            }
+            
+            selectedCrimesDiv.classList.remove('hidden');
+            crimesList.innerHTML = '';
+            
+            selectedCrimes.forEach((crime, index) => {
+                const crimeItem = document.createElement('div');
+                crimeItem.className = 'flex justify-between items-center bg-gray-600 p-3 rounded-lg';
+                crimeItem.innerHTML = `
+                    <div class="flex items-center">
+                        <span class="text-sm font-medium">${index + 1}. ${crime.name}</span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-red-400 text-sm">${crime.months}m</span>
+                        <span class="text-green-400 text-sm">R$ ${crime.fine.toLocaleString('pt-BR')}</span>
+                        <button onclick="removeCrime(${index})" class="text-red-500 hover:text-red-400 text-sm">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+                crimesList.appendChild(crimeItem);
+            });
+        }
+
+        function removeCrime(index) {
+            const crime = selectedCrimes[index];
+            crime.element.classList.remove('selected');
+            crime.element.querySelector('.crime-checkbox i').classList.add('hidden');
+            selectedCrimes.splice(index, 1);
+            updateSelectedCrimesList();
+            calculateTotal();
+            updateSuspectInfoVisibility();
+        }
+
+        function updateSuspectInfoVisibility() {
+            const suspectInfo = document.getElementById('suspectInfo');
+            if (selectedCrimes.length > 0) {
+                suspectInfo.classList.remove('hidden');
+            } else {
+                suspectInfo.classList.add('hidden');
+            }
+        }
+
+        function calculateTotal() {
+            totalMonths = selectedCrimes.reduce((sum, crime) => sum + crime.months, 0);
+            totalFine = selectedCrimes.reduce((sum, crime) => sum + crime.fine, 0);
+            
+            const reduction = parseInt(document.getElementById('reduction').value);
+            const reducedMonths = Math.floor(totalMonths * (1 - reduction / 100));
+            const reducedFine = Math.floor(totalFine * (1 - reduction / 100));
+            
+            document.getElementById('totalMonths').textContent = reducedMonths;
+            document.getElementById('totalFine').textContent = `R$ ${reducedFine.toLocaleString('pt-BR')}`;
+        }
+
+        function copyResult() {
+            const reduction = parseInt(document.getElementById('reduction').value);
+            const reducedMonths = Math.floor(totalMonths * (1 - reduction / 100));
+            const reducedFine = Math.floor(totalFine * (1 - reduction / 100));
+            const suspectId = document.getElementById('suspectId').value;
+            const suspectName = document.getElementById('suspectName').value;
+            
+            let result = `🚔 PENALIDADE CALCULADA 🚔\n`;
+            
+            if (suspectId || suspectName) {
+                result += `👤 SUSPEITO:\n`;
+                if (suspectId) result += `🆔 ID: ${suspectId}\n`;
+                if (suspectName) result += `📝 Nome: ${suspectName}\n`;
+                result += `\n`;
+            }
+            
+            result += `⏰ Prisão: ${reducedMonths} meses\n` +
+                     `💰 Multa: R$ ${reducedFine.toLocaleString('pt-BR')}\n` +
+                     `📉 Redução aplicada: ${reduction}%\n\n`;
+            
+            if (selectedCrimes.length > 0) {
+                result += `📋 CRIMES COMETIDOS:\n`;
+                selectedCrimes.forEach((crime, index) => {
+                    result += `${index + 1}. ${crime.name} (${crime.months}m + R$ ${crime.fine.toLocaleString('pt-BR')})\n`;
+                });
+                result += `\n`;
+            }
+            
+            result += `🔗 Calculado em: Calculadora Penal - Cali RP`;
+            
+            navigator.clipboard.writeText(result).then(() => {
+                alert('Resultado copiado para a área de transferência!');
+            });
+        }
+
+        function shareDiscord() {
+            const reduction = parseInt(document.getElementById('reduction').value);
+            const reducedMonths = Math.floor(totalMonths * (1 - reduction / 100));
+            const reducedFine = Math.floor(totalFine * (1 - reduction / 100));
+            const suspectId = document.getElementById('suspectId').value;
+            const suspectName = document.getElementById('suspectName').value;
+            
+            let message = `🚔 **PENALIDADE CALCULADA** 🚔\n`;
+            
+            if (suspectId || suspectName) {
+                message += `👤 **SUSPEITO:**\n`;
+                if (suspectId) message += `🆔 **ID:** ${suspectId}\n`;
+                if (suspectName) message += `📝 **Nome:** ${suspectName}\n`;
+                message += `\n`;
+            }
+            
+            message += `⏰ **Prisão:** ${reducedMonths} meses\n` +
+                      `💰 **Multa:** R$ ${reducedFine.toLocaleString('pt-BR')}\n` +
+                      `📉 **Redução aplicada:** ${reduction}%\n\n`;
+            
+            if (selectedCrimes.length > 0) {
+                message += `📋 **CRIMES COMETIDOS:**\n`;
+                selectedCrimes.forEach((crime, index) => {
+                    message += `${index + 1}. **${crime.name}** (${crime.months}m + R$ ${crime.fine.toLocaleString('pt-BR')})\n`;
+                });
+                message += `\n`;
+            }
+            
+            message += `🔗 **Calculado em:** Calculadora Penal - Cali RP`;
+            
+            navigator.clipboard.writeText(message).then(() => {
+                window.open('https://discord.gg/NEgRuvJJ6B', '_blank');
+                alert('Mensagem copiada! Cole no Discord.');
+            });
+        }
+
+        function clearAll() {
+            selectedCrimes = [];
+            totalMonths = 0;
+            totalFine = 0;
+            
+            document.querySelectorAll('.crime-card').forEach(card => {
+                card.classList.remove('selected');
+                const checkbox = card.querySelector('.crime-checkbox i');
+                if (checkbox) checkbox.classList.add('hidden');
+            });
+            
+            document.getElementById('reduction').value = '0';
+            document.getElementById('suspectId').value = '';
+            document.getElementById('suspectName').value = '';
+            
+            updateSelectedCrimesList();
+            calculateTotal();
+            updateSuspectInfoVisibility();
+        }
+
+        // Initialize
+        calculateTotal();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'979210f0e19bbc96',t:'MTc1Njg2OTE1My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
+
